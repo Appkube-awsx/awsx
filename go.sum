@@ -1,7 +1,7 @@
-github.com/Appkube-awsx/appconfig v1.0.0 h1:SoOUeHX7dqCOiIiZ5+ApDK+g41Ip2AZcPt8aQW4sot4=
-github.com/Appkube-awsx/appconfig v1.0.0/go.mod h1:KbzvHn/uIqJRcS10yLl3SWD+IVzjHwLsAy89kIl3oqw=
-github.com/aws/aws-sdk-go v1.44.178 h1:4igreoWPEA7xVLnOeSXLhDXTsTSPKQONZcQ3llWAJw0=
-github.com/aws/aws-sdk-go v1.44.178/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
+github.com/Appkube-awsx/awsx-cloudelements v1.0.1 h1:GC40Q0ilqpwmDhbhr6BP0zHICpj6TO9xwSgk45TDiY8=
+github.com/Appkube-awsx/awsx-cloudelements v1.0.1/go.mod h1:0TDb4ZcAXbxAupXvXuJc/qUpZ5U1iiZsF2e0Dj9Hd48=
+github.com/aws/aws-sdk-go v1.44.180 h1:VLZuAHI9fa/3WME5JjpVjcPCNfpGHVMiHx8sLHWhMgI=
+github.com/aws/aws-sdk-go v1.44.180/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
 github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
