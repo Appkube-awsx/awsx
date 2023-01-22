@@ -7,6 +7,9 @@ Please refer to Appkube Architecture diagram for details on how the appkube plat
 
 Please refer the specification of subcommands for every subcommands input/ output / algos.
 
+# How to build / Run / Debug 
+
+
 # Command structure
     <main command> <persistant flags> <sub-command> <sub-command flags>
     e.g. awsx --vaultURL=vault.dummy.net --accountId=xxxxxxxxxx  getElementDetails  --zone=us-west-2
@@ -17,20 +20,115 @@ Please refer the specification of subcommands for every subcommands input/ outpu
     getElementDetails:  It is the sub-command of parent awsx
     --zone:             Sub-command flag which provide AWS region to the sub-command
 
+# How to write a plugin subcommand
+The best way to start writing an subcommand is to follow the example subcommand -
+https://github.com/Appkube-awsx/awsx-cloudelements
+
+The process is as follows:
+1. Create a independent git repo for the subcommnad like https://github.com/Appkube-awsx/awsx-cloudelements
+
+2. Clone the repo to your local machine to add code git clone https://github.com/Appkube-awsx/awsx-cloudelements.git
+
+3. Go in the awsx-cloudelements directory and execute the following commands
+    a. initialize the project
+        go mod init github.com/Appkube-awsx/awsx-cloudelements
+    b. download the latest version of cobra cli
+        go get github.com/spf13/cobra@latest
+    c. install the Cobra cli
+        go install github.com/spf13/cobra-cli@latest
+    d. execute cobra-cli init command. This command will generate the application with the correct file structure and imports:
+        cobra-cli init
+
+4. The above command will create directory structure as below and generate the basic cli code in root.go and main.go
+
+    awsx-cloudelements
+        |
+        |__cmd
+            |__root.go
+        |__main.go
+
+        In the root.go you will find the code as below
+
+            var rootCmd = &cobra.Command{
+                Use:   "aws-cloudelements",
+                Short: "A brief description of your application",
+                Long: `A longer description that spans multiple lines and likely contains
+                        examples and usage of using your application. For example:
+
+                        Cobra is a CLI library for Go that empowers applications.
+                        This application is a tool to generate the needed files
+                        to quickly create a Cobra application.`,
+                // Uncomment the following line if your bare application
+                // has an action associated with it:
+                Run: func(cmd *cobra.Command, args []string) {
+                    fmt.Println("Calling aws-cloudelements")
+                },
+            }
+
+            func Execute() {
+                err := rootCmd.Execute()
+                if err != nil {
+                    log.Fatal("There was some error while executing the CLI: ", err)
+                    os.Exit(1)
+                }
+            }
+
+            func init() {
+                
+            }
+
+            - In the Run inline function we should write our cli code. 
+            - In our example we have written a fmt.Println("Calling aws-cloudelements")
+            - When we execute this command, this message will be printed on console
+
+        In main.go we should call the command. So the main.go should be as below:
+
+            package main
+
+            import "github.com/Appkube-awsx/awsx-cloudelements/cmd"
+
+            func main() {
+                cmd.Execute()
+            }
+
+5.  Run and test the code as follows:
+            go run main.go
+                - Program will print Calling aws-cloudelements on console 
+
+            Another way of testing is by running go install command
+            go install
+            - go install command creates an exe with the name of the module (e.g. awsx-cloudelements) and save it in the GOPATH
+            - Now we can execute this command on command prompt as below
+            awsx-cloudelements
+
+6.  Publish the code in git so that other modules can download this code as dependency from git
+
+        a. Commit and push the code
+        b. Tag the code. Use the following git commands to tag it
+            git tag "v1.0.0"
+            git push --tags
+    
+        c. Developers interested in this module, import it by running the go get command as below
+            go get github.com/Appkube-awsx/awsx-cloudelements@v1.0.0
+            
+            In the above go get command (go get github.com/Appkube-awsx/awsx-cloudelements@v1.0.0) we have specified the version (v1.0.0).
+            
+            This version is the git tag, what we specified in the git tag command earlier. 
+
 # How to embed sub-command in GO CLI
-    We can add as many sub-commands as required
-    1. Create a main cobra command. We have created the parent AwsxCmd as below
-        var AwsxCmd = &cobra.Command{
-            Use:   "awsx",
-            Short: "awsx main command",
-            Long:  `awsx main command`,
-            Run: func(cmd *cobra.Command, args []string) {
-            },
-        }
-    2. In the init function add the sub-command to the parent command
-        func init() {
-            AwsxCmd.AddCommand(cmd.AwsxCloudElementsCmd)
-        }
+            We can add as many sub-commands as required
+            1. Create a main cobra command. We have created the parent AwsxCmd as below
+                var AwsxCmd = &cobra.Command{
+                    Use:   "awsx",
+                    Short: "awsx main command",
+                    Long:  `awsx main command`,
+                    Run: func(cmd *cobra.Command, args []string) {
+                    },
+                }
+            2. In the init function add the sub-command to the parent command
+                func init() {
+                    AwsxCmd.AddCommand(cmd.AwsxCloudElementsCmd)
+                }
 
 # [Type of flags in Cobra CLI](https://dev.to/divrhino/adding-flags-to-a-command-line-tool-built-with-go-and-cobra-34f1)
     Cobra has two types of flags:
