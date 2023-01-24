@@ -1,6 +1,10 @@
 - [What is AWSX](#awsx)
 - [How To build /Run / Debug ](#how-to-build--run--debug)
 - [How To run command](#command-structure)
+- [How to write a plugin subcommand](#how-to-write-a-plugin-subcommand)
+- [How to embed sub-command in GO CLI](#how-to-embed-sub-command-in-go-cli)
+- [How to download sub-command/module from git](#how-to-download-sub-commandmodule-from-git)
+- [How to run a specific version of  sub-command/module from main awsx](#how-to-run-a-specific-version-of-sub-commandmodule-from-main-awsx)
 # awsx
 AWSX is the modular command line CLI for for Appkube platform. All the subcommands are written as plugins for the main commands.
 Appkube job engine calls those CLI commands for all its supported automation jobs. The commands are also directly embeddded in AWSX-Api
@@ -186,18 +190,17 @@ The process is as follows:
 # How to download sub-command/module from git
 
     Open command prompt and go to the directory where go.mod file available
-    We can do it in two ways
-    1. 
+    
     * To download any specific version of a module, run go get command with version number
         go get github.com/Appkube-awsx/awsx-cloudelements@v1.0.1
     * To download latest version of a module, run go get command with @latest
         go get github.com/Appkube-awsx/awsx-cloudelements@latest
         - If we omit the version number or @latest, go get command downloads the latest version always
     *  After it we can do the code chage and run go build or go install on command prompt
-    2.
-    * make the change in go.mod file
+    
+# How to run a specific version of  sub-command/module from main awsx
+    * make the change in go.mod file (in subcommand require section , you can import a specific version)
     * run go mod tidy command at command prompt. This will downlod the required modules in GOPATH
-
 
 # [Type of flags in Cobra CLI](https://dev.to/divrhino/adding-flags-to-a-command-line-tool-built-with-go-and-cobra-34f1)
     Cobra has two types of flags:
