@@ -50,6 +50,13 @@ Please refer the specification of subcommands for every subcommands input/ outpu
                 go run ./main.go arg1 arg2
                 go run ./main.go --flag1=value --flag2=value
 
+# Command structure in DEV mode
+        go run ./main.go --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
+        * On Linux or Mac:
+            
+            $ ./awsx --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
+        * On Windows:
+            $ awsx.exe --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
 
 # Command structure
     <main command> <persistant flags> <sub-command> <sub-command flags>
@@ -170,6 +177,22 @@ The process is as follows:
                 func init() {
                     AwsxCmd.AddCommand(cmd.AwsxCloudElementsCmd)
                 }
+
+# How to download sub-command/module from git
+
+    Open command prompt and go to the directory where go.mod file available
+    We can do it in two ways
+    1. 
+    * To download any specific version of a module, run go get command with version number
+        go get github.com/Appkube-awsx/awsx-cloudelements@v1.0.1
+    * To download latest version of a module, run go get command with @latest
+        go get github.com/Appkube-awsx/awsx-cloudelements@latest
+        - If we omit the version number or @latest, go get command downloads the latest version always
+    *  After it we can do the code chage and run go build or go install on command prompt
+    2.
+    * make the change in go.mod file
+    * run go mod tidy command at command prompt. This will downlod the required modules in GOPATH
+
 
 # [Type of flags in Cobra CLI](https://dev.to/divrhino/adding-flags-to-a-command-line-tool-built-with-go-and-cobra-34f1)
     Cobra has two types of flags:
