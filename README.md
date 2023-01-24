@@ -2,9 +2,13 @@
 - [How To build /Run / Debug ](#how-to-build--run--debug)
 - [How To run command](#command-structure)
 - [How to write a plugin subcommand](#how-to-write-a-plugin-subcommand)
+- [How to support flags and inputs in subcommand](#how-to-support-flags-and-inputs-in-subcommand)
 - [How to embed sub-command in GO CLI](#how-to-embed-sub-command-in-go-cli)
 - [How to download sub-command/module from git](#how-to-download-sub-commandmodule-from-git)
 - [How to run a specific version of  sub-command/module from main awsx](#how-to-run-a-specific-version-of-sub-commandmodule-from-main-awsx)
+- [All subcommands plugins references](#all-subcommands-plugins-references)
+
+
 # awsx
 AWSX is the modular command line CLI for for Appkube platform. All the subcommands are written as plugins for the main commands.
 Appkube job engine calls those CLI commands for all its supported automation jobs. The commands are also directly embeddded in AWSX-Api
@@ -171,7 +175,12 @@ The process is as follows:
             In the above go get command (go get github.com/Appkube-awsx/awsx-cloudelements@v1.0.0) we have specified the version (v1.0.0).
             
             This version is the git tag, what we specified in the git tag command earlier. 
+# How to support flags and inputs in subcommand 
 
+    Cobra has two types of flags:
+
+    *    Persistent flags - available to the command it is assigned to, as well as all its sub-commands
+    *    Local flags - only assigned to a specific command
 # How to embed sub-command in GO CLI
             We can add as many sub-commands as required
             1. Create a main cobra command. We have created the parent AwsxCmd as below
@@ -202,8 +211,7 @@ The process is as follows:
     * make the change in go.mod file (in subcommand require section , you can import a specific version)
     * run go mod tidy command at command prompt. This will downlod the required modules in GOPATH
 
-# [Type of flags in Cobra CLI](https://dev.to/divrhino/adding-flags-to-a-command-line-tool-built-with-go-and-cobra-34f1)
-    Cobra has two types of flags:
+# All subcommands plugins references
+All the supported subcommands and there source code locations are mentiioned in 
 
-    *    Persistent flags - available to the command it is assigned to, as well as all its sub-commands
-    *    Local flags - only assigned to a specific command
+    https://github.com/AppkubeCloud/appkube-api-specs/blob/main/awsx-api.md
