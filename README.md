@@ -1,3 +1,6 @@
+- [What is AWSX](#awsx)
+- [How To build /Run / Debug ](#how-to-build--run--debug)
+- [How To run command](#command-structure)
 # awsx
 AWSX is the modular command line CLI for for Appkube platform. All the subcommands are written as plugins for the main commands.
 Appkube job engine calls those CLI commands for all its supported automation jobs. The commands are also directly embeddded in AWSX-Api
@@ -50,14 +53,6 @@ Please refer the specification of subcommands for every subcommands input/ outpu
                 go run ./main.go arg1 arg2
                 go run ./main.go --flag1=value --flag2=value
 
-# Command structure in DEV mode
-        go run ./main.go --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
-        * On Linux or Mac:
-            
-            $ ./awsx --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
-        * On Windows:
-            $ awsx.exe --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
-
 # Command structure
     <main command> <persistant flags> <sub-command> <sub-command flags>
     e.g. awsx --vaultURL=vault.dummy.net --accountId=xxxxxxxxxx  getElementDetails  --zone=us-west-2
@@ -67,6 +62,16 @@ Please refer the specification of subcommands for every subcommands input/ outpu
     --accountId:        This persistant flag pass the AWS account id to the sub-command. Sub-command pass this account id as key to the vault serve to get user credentials \
     getElementDetails:  It is the sub-command of parent awsx
     --zone:             Sub-command flag which provide AWS region to the sub-command
+
+    In Dev Env , you could run the awsx also as follows:
+
+        go run ./main.go --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
+        * On Linux or Mac:
+            
+            $ ./awsx --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
+        * On Windows:
+            $ awsx.exe --vaultUrl=http://localhost:10000/vi/account --accountId=xxxxxxxxxx
+
 
 # How to write a plugin subcommand
 The best way to start writing an subcommand is to follow the example subcommand -
