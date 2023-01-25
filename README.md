@@ -175,12 +175,104 @@ The process is as follows:
             In the above go get command (go get github.com/Appkube-awsx/awsx-cloudelements@v1.0.0) we have specified the version (v1.0.0).
             
             This version is the git tag, what we specified in the git tag command earlier. 
-# How to support flags and inputs in subcommand 
 
-    Cobra has two types of flags:
+# How to support flags and inputs arguments in subcommand 
+    In GO it is possible to pass parameters or arguments to a program's main function using flags or command-line arguments .
+    
+    Flags:
+        Cobra has two types of flags:
+        * Persistent flags - available to the command it is assigned to, as well as all its sub-commands\
+        * Local flags - only assigned to single command
 
-    *    Persistent flags - available to the command it is assigned to, as well as all its sub-commands
-    *    Local flags - only assigned to a specific command
+        1. Declaring persistent flags in cobra command
+            We need to write the code to declare flags in init() function of cobra command.  
+        
+            func init() {
+                AwsxCmd.PersistentFlags().String("vaultUrl", "", "vault end point")
+                AwsxCmd.PersistentFlags().String("accountId", "", "aws account number")
+            }
+            - As per the above init function the awsx command accepts two persistant flags --vaultUrl and --accountId. 
+            - Since these are persistant flags, both the flags will be available to all the subcommand of awsx command
+        
+        2. Declaring local flags in cobra command
+            Same way local flags also get declared in init() function of cobra command.  
+        
+            func init() {
+                AwsxCloudElementsCmd.Flags().String("zone", "", "aws region")
+            }
+            - The above init function is taken from getElementDetails sub-command which accepts single local flag --zone. 
+            - Since this is a local flag, this will be available to getElementDetails sub-command only
+            NOTE: getElementDetails is another independent cobra command which act as a sub-command of awsx as well
+    
+        3. Run the command with flags
+            Open the terminal and run the command as below with flags
+            
+            awsx --vaultURL=vault.dummy.net --accountId=xxxxxxxxxx  getElementDetails  --zone=us-west-2
+                    
+            - In the above command we have passed two flags --vaultURL and --accountId to awsx command and --zone to getElementDetails sub-command
+              These flags are persistant flags and will be accessible in getElementDetails sub-command
+            - One local flag --zone is paased in the getElementDetails sub-command and this will be available to this sub-command only
+    
+        4. Flag structure
+            AwsxCmd.PersistentFlags().String("vaultUrl", "", "vault end point")
+            AwsxCloudElementsCmd.Flags().String("zone", "", "aws region")
+            
+            - As above Both the flags (persistant and local) declared as of type String. 
+            - Both flags have three parameters
+                        String("vaultUrl", "", "vault end point")
+                        String("zone", "", "aws region")
+                    * parameter 1 is the name of the flag. In our case; vaultUrl is the name of persistant flag and zone is the name of local flag
+                    * parameter 2 is the default values. In our case it is empty. If we provide some default value to the second paramerter, command take it as flag value if we omit the flag from command line
+                    * parameter 3 is the description of the flag
+        
+        5. Retrieve flag values in command
+            var rootCmd = &cobra.Command{
+                Use:   "command name",
+                Short: "short description of command",
+                Long:  `detailed/long description of command`,
+                Run: func(cmd *cobra.Command, args []string) {
+                    vaultUrl, _ := cmd.Flags().GetString("vaultUrl")
+            
+                    fmt.Println(vaultUrl)
+                },
+            }
+            - In the above code cmd.Flags().GetString("vaultUrl") instruction is getting vaultUrl flag value and storing in vaultUrl variable
+    
+    Input Arguments:
+        To retrieve the command line arguments, we need os package. The Args variable in the os package returns all the command line arguments as array of string
+            - var Args []string: : Args hold the command-line arguments, starting with the program name.
+        Example:
+            1. create a go file main.go
+            2. Add the below code to main.go
+                    package main
+
+                    import (
+                    "fmt"
+                    "os"
+                    )
+                    
+                    func main() {
+                        programName := os.Args[0]
+                        secondArg := os.Args[1]
+                        thirdArg := os.Args[2]
+                        allArgs := os.Args[1:]
+                    
+                        fmt.Println(programName)
+                        fmt.Println(secondArg)
+                        fmt.Println(thirdArg)
+                        fmt.Println(allArgs)
+                    }
+            3. build the program
+                $ go build main.go
+            4. Run its executable
+                $ ./main first second third
+            5. Output
+                    ./main
+                    first
+                    second
+                    [first second third]
+    
+
 # How to embed sub-command in GO CLI
             We can add as many sub-commands as required
             1. Create a main cobra command. We have created the parent AwsxCmd as below
