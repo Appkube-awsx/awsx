@@ -3,7 +3,7 @@ module awsx
 go 1.19
 
 require (
-	github.com/Appkube-awsx/awsx-cloudelements v1.0.1
+	github.com/Appkube-awsx/awsx-cloudelements v1.0.8
 	github.com/spf13/cobra v1.6.1
 )
 

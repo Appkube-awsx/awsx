@@ -7,7 +7,7 @@
 - [How to download sub-command/module from git](#how-to-download-sub-commandmodule-from-git)
 - [How to run a specific version of  sub-command/module from main awsx](#how-to-run-a-specific-version-of-sub-commandmodule-from-main-awsx)
 - [All subcommands plugins references](#all-subcommands-plugins-references)
-
+- [Building Docker image and running it](#building-docker-image-and-running-it)
 
 # awsx
 AWSX is the modular command line CLI for for Appkube platform. All the subcommands are written as plugins for the main commands.
@@ -307,3 +307,10 @@ The process is as follows:
 All the supported subcommands and there source code locations are mentiioned in 
 
     https://github.com/AppkubeCloud/appkube-api-specs/blob/main/awsx-api.md
+    
+# Building Docker image and running it
+--Build it 
+docker build -t awsx .
+
+--Run it
+docker run -it awsx --help

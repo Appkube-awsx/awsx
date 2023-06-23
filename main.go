@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/Appkube-awsx/awsx-cloudelements/cmd"
-	"github.com/spf13/cobra"
 	"log"
 	"os"
+
+	"github.com/Appkube-awsx/awsx-cloudelements/cmd"
+	"github.com/spf13/cobra"
 )
 
 var AwsxCmd = &cobra.Command{
@@ -35,13 +36,6 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	AwsxCmd.AddCommand(cmd.AwsxCloudElementsCmd)
-	//AwsxCmd.PersistentFlags().String("vaultUrl", "", "vault end point")
-	//AwsxCmd.PersistentFlags().String("ac", "", "aws account number")
-	//AwsxCmd.PersistentFlags().String("region", "", "aws region")
-	//AwsxCmd.PersistentFlags().String("accessKey", "", "aws access key")
-	//AwsxCmd.PersistentFlags().String("secretKey", "", "aws secret key")
-	//AwsxCmd.PersistentFlags().String("crossAccountRoleArn", "", "aws cross account role arn")
-
 }
 
 func main() {
