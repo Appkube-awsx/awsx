@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  generateName: awsx-run-
+spec:
+  taskRef:
+    name: awsx-cli
+  params:
+    - name: ARGS
+      value:
+        - getElementDetails
+        - --help

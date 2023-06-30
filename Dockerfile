@@ -13,5 +13,5 @@ RUN go build -o /go/bin/awsx
 FROM scratch
 # Copy our static executable.
 COPY --from=builder /go/bin/awsx /go/bin/awsx
-# Run the hello binary.
+# Run the AWSX
 ENTRYPOINT ["/go/bin/awsx"]
