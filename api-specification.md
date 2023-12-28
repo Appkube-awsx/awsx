@@ -1,7 +1,25 @@
 
+- [awsx-api](#awsx-api)
+- [getLandingZoneDetails subcommand details](#getlandingzonedetails-subcommand-details)
+- [getElementDetails subcommand details](#getelementdetails-subcommand-details)
+  
+# awsx-api
+AWSX is the modular command line CLI for for Appkube platform. All the subcommands are written as plugins for the main commands.Appkube job engine calls those CLI commands for all its supported automation jobs. The commands are also directly embeddded in AWSX-Api server. 
+Please refer to Appkube Architecture diagram for details on how the appkube platform calls this commands.
 
+Here follows the list of subcommands:
+1. getLandingZoneDetails
+2. getLandingZoneCompliance
+3. getElementDetails
+4. getCostDetails
+5. getBusinessServiceDetails
+6. getSlaDetails
+7. provision
+8. diaganose
+9. health
+10. secret
 
-
+All the supported subcommands and there source code locations are as follows:
 
 | S.No | Sub-command     |                Description                             |      Repository        |            functionalities                                                                                                         |
 |------|-----------------------|----------------------------------------------------|-------------------|-------------------------------------------------------------------------------------------------------------------------|
@@ -15,3 +33,27 @@
 | 8    |  diaganose | Run Diagnostics on  infra and App Services on AWS |     Bytes     | 1.Infra Elements<br /> 2.Service Elements <br />  |
 | 9    |  health | Run Diagnostics on  infra and App Services on AWS |     Bytes     | 1.Infra Elements<br /> 2.Service Elements <br />  |
 | 10    |  secret | secret management of infra and service elements |     Bytes     | 1.Infra Elements<br /> 2.Service Elements <br />  |
+
+
+Please refer the specification of subcommands for every subcommands input/ output / algos.
+
+# getLandingZoneDetails subcommand details
+
+| S.No | CLI Spec|  Description                           
+|------|----------------|----------------------|
+| 1    | awsx --vaultURL=vault.synectiks.net getLandingZoneDetails --zoneId="1234" --getElementsMetadata  | This will get the metadata from AWS config service |
+| 2    | awsx --vaultURL=vault.synectiks.net getLandingZoneDetails --zoneId="1234" --getElementsDetails  | This will get all the element details from AWS config service |
+| 3    | awsx --vaultURL=vault.synectiks.net getLandingZoneDetails --zoneId="1234" --getProductDetails  | This will get all the product and environment details that is hosted in that landing zone |
+| 4    | awsx --vaultURL=vault.synectiks.net getLandingZoneDetails --zoneId="1234" --getCostDetails  | This will get all the cost details for the landing zone |
+
+# getElementDetails subcommand details
+
+This subcommand will need to take care for all the cloud elements and for every element, we need to support the composite 
+method like network_utilization_panel. So , we can keep a single repo for the subcommand and keep separate folders for the different element handlers.
+
+| S.No | CLI Spec|  Description                           
+|------|----------------|----------------------|
+| 1    | awsx --vaultURL=vault.synectiks.net getElementDetails --elementId="1234" --elementType=EC2 --query="ec2-config-data"  | This will get the specific EC2 instance config data |
+| 2    | awsx --vaultURL=vault.synectiks.net getElementDetails --elementId="1234" --elementType=EC2 --query="cpu_utilization_panel"  | This will get the specific EC2 instance cpu utilization panel data in hybrid structure |
+| 3    | awsx --vaultURL=vault.synectiks.net getElementDetails --elementId="1234" --elementType=EC2 --query="storage_utilization_panel" | This will get the specific EC2 instance storage utilization panel data in hybrid structure|
+| 4    | awsx --vaultURL=vault.synectiks.net getElementDetails --elementId="1234" --elementType=EC2 --query="network_utilization_panel"  | This will get the specific EC2 instance network utilization panel data in hybrid structure |
