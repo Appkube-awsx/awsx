@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/Appkube-awsx/awsx-getelementdetails/handler/EC2"
 	"log"
 	"os"
 
@@ -36,6 +37,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	AwsxCmd.AddCommand(cmd.AwsxCloudElementsCmd)
+	AwsxCmd.AddCommand(EC2.CpuUtilizationPanelCmd)
 }
 
 func main() {
