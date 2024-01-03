@@ -1,10 +1,11 @@
 
-- [awsx-api](#awsx-api)
+- [awsx-api-specifications](#awsx-api-specifications)
 - [getLandingZoneDetails subcommand details](#getlandingzonedetails-subcommand-details)
 - [getElementDetails subcommand details](#getelementdetails-subcommand-details)
   
-# awsx-api
+# awsx-api-specifications
 AWSX is the modular command line CLI for for Appkube platform. All the subcommands are written as plugins for the main commands.Appkube job engine calls those CLI commands for all its supported automation jobs. The commands are also directly embeddded in AWSX-Api server. 
+
 Please refer to Appkube Architecture diagram for details on how the appkube platform calls this commands.
 
 Here follows the list of subcommands:

@@ -8,6 +8,7 @@
 - [How to run a specific version of  sub-command/module from main awsx](#how-to-run-a-specific-version-of--sub-commandmodule-from-main-awsx)
 - [All subcommands plugins references](#all-subcommands-plugins-references)
 - [Building Docker image and running it](#building-docker-image-and-running-it)
+- [How SRE platform calls CLI/API](#how-sre-platform-calls-cliapi)
 
 # awsx
 AWSX is the modular command line CLI for for Appkube platform. All the subcommands are written as plugins for the main commands.
@@ -322,8 +323,56 @@ All the supported subcommands and there source code locations are mentiioned in
 | 10    |  secret | secret management of infra and service elements |     Bytes     | 1.Infra Elements<br /> 2.Service Elements <br />  |
     
 # Building Docker image and running it
+
 --Build it 
 docker build -t awsx .
 
 --Run it
 docker run -it awsx --help
+
+# How SRE platform calls CLI/API 
+
+From SUI , following is fired when we click element explorer
+
+https://sre.synectiks.net/?elementType=EC2 , elementId=2435
+
+It opens EC2 plugin inside SRE platform with Global Variable been equated with 2435
+
+Panel Wise Query 
+
+From DS UI , corresponding to elementId, elementType and list of supported Queries is shown.
+
+/awsx-api/getSupportedQueries?elementType=EC2
+
+It get response like 
+1. cpu_utilization_panel 
+2. storage_utilization_panel
+3. network_utilization_panel
+4. ec2-config-data
+
+From DS UI , you select cpu_utilization_panel
+
+DS UI then fire the queries to DS backend as follows:
+
+elementType=EC2 , elementId=2435 , query=cpu_utilization_panel , --timeRange={}
+
+DS backend get the value of customerRoleArn for the elementId from cmdb
+
+DS backend get the value of instanceId for the elementId from cmdb
+
+DS backend then calls the API 
+
+/awsx-api/getQueryOutput? elementType=EC2, elementId="1234" , query=cpu_utilization_panel, --timeRange={}
+
+API server will call the awsx cli command as 
+
+awsx --vaultURL=vault.synectiks.net getElementDetails --elementId="1234" --elementType=EC2 --query="cpu_utilization_panel" --timeRange={}
+
+Following Output is passed back from awsx to api to datasource to dashboard layer
+{
+	CurrentUsage:25,
+	AverageUsage:30,
+	MaxUsage:40
+}
+
+The dashboard then associate the output data to the panel.
