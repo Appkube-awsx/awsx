@@ -11,7 +11,7 @@ cli to monitors AWS resources using cloudwatch metric queries. It is written in 
 
 ### Command Details
 ```
-go run awsx-getelementdetails.go cpu_utilization_panel --zone=us-east-1 --externalId=DJ6@a8hzG@xkFwSvLmkSR5SN --crossAccountRoleArn=arn:aws:iam::657907747545:role/CrossAccount --elementType="AWS/EC2" --instanceID="i-05e4e6757f13da657" --query="CPUUtilization" --timeRange={}
+go run awsx-getelementdetails.go --zone=us-east-1 --externalId=DJ6@a8hzG@xkFwSvLmkSR5SN --crossAccountRoleArn=arn:aws:iam::657907747545:role/CrossAccount --elementType="AWS/EC2" --instanceID="i-05e4e6757f13da657" --query="cpu_utilization_panel"
 ```
 ### Output
 ```
@@ -123,7 +123,7 @@ awsx is the main parent command.
 
 ### Command Details
 ```
-awsx cpu_utilization_panel --zone=us-east-1 --externalId=DJ6@a8hzG@xkFwSvLmkSR5SN --crossAccountRoleArn=arn:aws:iam::657907747545:role/CrossAccount --instanceID="i-05e4e6757f13da657" --query="CPUUtilization" --elementType="AWS/EC2"
+awsx cpu_utilization_panel --zone=us-east-1 --externalId=DJ6@a8hzG@xkFwSvLmkSR5SN --crossAccountRoleArn=arn:aws:iam::657907747545:role/CrossAccount --elementType="AWS/EC2" --instanceID="i-05e4e6757f13da657" --query="cpu_utilization_panel"
 ```
 ### Output
 ```
@@ -151,7 +151,7 @@ awsx cpu_utilization_panel --zone=us-east-1 --externalId=DJ6@a8hzG@xkFwSvLmkSR5S
 This Go code defines an HTTP handler function for retrieving CPU utilization metrics for EC2 instances in the AWS cloud. The API supports both direct authentication using AWS credentials and cross-account authentication.
 
 ## API Endpoint
-- **Endpoint:** `/awsx/ec2/cpu-utilization-panel`
+- **Endpoint:** `/awsx-api/getQueryOutput`
 - **HTTP Method:** `GET`
 This markdown file contains all api document Order-wise how does flow works of EC2 CPU Utilization Panel
 
@@ -196,7 +196,7 @@ Code   | Summary
 
 ## Curl Command 
 ```
-curl --location 'http://localhost:7000/awsx/ec2/cpu-utilization-panel?zone=us-east-1&externalId=DJ6%40a8hzG%40xkFwSvLmkSR5SN&crossAccountRoleArn=arn%3Aaws%3Aiam%3A%3A657907747545%3Arole%2FCrossAccount&elementType=AWS%2FEC2&instanceID=i-05e4e6757f13da657&query=CPUUtilization&statistic=SampleCount' \
+curl --location 'http://localhost:7000/awsx-api/getQueryOutput?zone=us-east-1&externalId=DJ6%40a8hzG%40xkFwSvLmkSR5SN&crossAccountRoleArn=arn%3Aaws%3Aiam%3A%3A657907747545%3Arole%2FCrossAccount&elementType=AWS%2FEC2&instanceID=i-05e4e6757f13da657&query=cpu_utilization_panel&endTime=2023-12-02T23%3A59%3A59Z&startTime=2023-12-01T00%3A00%3A00Z&responseType=json' \
 --data ''
 ```
 
@@ -207,3 +207,68 @@ curl --location 'http://localhost:7000/awsx/ec2/cpu-utilization-panel?zone=us-ea
 ```
 
 
+## Appkube-Platform (Grafana) Documentation
+
+
+#### Purpose
+
+The `testAppkubeCputUtilization` function is a Go function designed to query CPU utilization data using the AppKube API and Infinity client.
+
+#### Parameters
+
+- `zone` (string): The AWS region/zone to query (e.g., "us-east-1").
+- `externalId` (string): External identifier for authentication.
+- `crossAccountRoleArn` (string): ARN (Amazon Resource Name) of the cross-account IAM role.
+- `elementType` (string): Type of the AWS resource (e.g., "AWS/EC2").
+- `instanceID` (string): ID of the specific AWS instance.
+- `query` (string): Query type, in this case, "CPUUtilization".
+- `statistic` (string): Statistic type, in this case, "SampleCount".
+
+#### Usage
+
+```
+// Example Usage
+testAppkubeCputUtilization()
+```
+#### Dependencies
+- Infinity package for creating an Infinity client.
+- The pluginhost and backend packages for querying data and plugin context.
+
+#### Error Handling
+
+If an error occurs while creating the Infinity client, an error message will be printed to the console.
+
+#### Notes
+
+- Ensure that the necessary dependencies are installed before using the function.
+- This function assumes a specific JSON format for the query and sends it to the AppKube API.
+
+Example JSON Query
+```
+{
+    "type": "appkube-api",
+    "source": "url",
+    "productId": 1,
+    "environmentId": 2,
+    "moduleId": 2,
+    "serviceId": 2,
+    "serviceType": "java app service",
+    "zone": "us-east-1",
+    "externalId": "657907747545",
+    "crossAccountRoleArn": "arn:aws:iam::657907747545:role/CrossAccount",
+    "elementType": "AWS/EC2",
+    "instanceID": "i-05e4e6757f13da657",
+    "query": "CPUUtilization",
+    "statistic": "SampleCount"
+}
+
+```
+
+#### Response
+
+The function prints the response frames obtained from the AppKube API.
+
+```
+fmt.Println("Response: ", res.Frames)
+
+```

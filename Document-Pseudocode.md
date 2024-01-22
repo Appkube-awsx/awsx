@@ -7,20 +7,18 @@ This CLI tool fetches CPU utilization metrics from AWS CloudWatch for a specifie
 This defines a Cobra command named cpu_utilization_panel with a short and long description.
 
 ```
-var CpuUtilizationPanelCmd = &cobra.Command{
-    Use:   "cpu_utilization_panel",
-    Short: "getCpuUtilizationPanel command gets cloudwatch metrics data",
-    Long:  `getCpuUtilizationPanel command gets cloudwatch metrics data`,
-    Run: func(cmd *cobra.Command, args []string) {
-        // ... code inside the Run function ...
-    },
+var AwsxCloudWatchMetricsCmd = &cobra.Command{
+   Use:   "getAwsCloudWatchMetrics",
+	Short: "getAwsCloudWatchMetrics command gets cloudwatch metrics data",
+	Long:  `getAwsCloudWatchMetrics command gets cloudwatch metrics data`,
+   
 }
 ```
 #### Command Execution
 This function executes the Cobra command. It's likely meant to be called from somewhere else in your application.
 ```
 func Executed() {
-    if err := CpuUtilizationPanelCmd.Execute(); err != nil {
+    if err := AwsxCloudWatchMetricsCmd.Execute(); err != nil {
         log.Println("error executing command: %v", err)
     }
 }
@@ -29,20 +27,23 @@ func Executed() {
 The init function sets up the persistent flags for the command. These flags define the parameters that can be passed to the command when it is invoked.
 ```
 func init() {
-	CpuUtilizationPanelCmd.PersistentFlags().String("cloudElementId", "", "cloud element id")
-	CpuUtilizationPanelCmd.PersistentFlags().String("cloudElementApiUrl", "", "cloud element api")
-	CpuUtilizationPanelCmd.PersistentFlags().String("vaultUrl", "", "vault end point")
-	CpuUtilizationPanelCmd.PersistentFlags().String("vaultToken", "", "vault token")
-	CpuUtilizationPanelCmd.PersistentFlags().String("accountId", "", "aws account number")
-	CpuUtilizationPanelCmd.PersistentFlags().String("zone", "", "aws region")
-	CpuUtilizationPanelCmd.PersistentFlags().String("accessKey", "", "aws access key")
-	CpuUtilizationPanelCmd.PersistentFlags().String("secretKey", "", "aws secret key")
-	CpuUtilizationPanelCmd.PersistentFlags().String("crossAccountRoleArn", "", "aws cross account role arn")
-	CpuUtilizationPanelCmd.PersistentFlags().String("externalId", "", "aws external id")
-	CpuUtilizationPanelCmd.PersistentFlags().String("elementType", "", "element type")
-	CpuUtilizationPanelCmd.PersistentFlags().String("instanceID", "", "instance id")
-	CpuUtilizationPanelCmd.PersistentFlags().String("query", "", "query")
-	CpuUtilizationPanelCmd.PersistentFlags().String("timeRange", "", "timeRange")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("cloudElementId", "", "cloud element id")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("cloudElementApiUrl", "", "cloud element api")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("vaultUrl", "", "vault end point")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("vaultToken", "", "vault token")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("accountId", "", "aws account number")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("zone", "", "aws region")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("accessKey", "", "aws access key")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("secretKey", "", "aws secret key")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("crossAccountRoleArn", "", "aws cross account role arn")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("externalId", "", "aws external id")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("cloudWatchQueries", "", "aws cloudwatch metric queries")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("elementType", "", "element type")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("instanceID", "", "instance id")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("query", "", "query")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("startTime", "", "start time")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("endTime", "", "endcl time")
+	AwsxCloudWatchMetricsCmd.PersistentFlags().String("responseType", "", "response type. json/frame")
 }
 ```
 
@@ -80,27 +81,40 @@ if startTimeStr != "" {
 #### Metric Data Query and Output
 This part of the code calls the GetCpuUtilizationMetricData function with various statistics like SampleCount, Average, and Maximum. The results are then formatted into a JSON structure.
 ```
-currentUsage, err := GetCpuUtilizationMetricData(clientAuth, instanceID, metricName, namespace, startTime, endTime, "SampleCount")
-			if err != nil {
-				log.Fatal(err)
-			}
-// Get average usage
-averageUsage, err := GetCpuUtilizationMetricData(clientAuth, instanceID, metricName, namespace, startTime, endTime, "Average")
-			if err != nil {
-				log.Fatal(err)
-			}
+cloudwatchMetricData := map[string]*cloudwatch.GetMetricDataOutput{}
+	currentUsage, err := GetCpuUtilizationMetricData(clientAuth, instanceID, namespace, startTime, endTime, "SampleCount")
+	if err != nil {
+		log.Println("Error in getting sample count: ", err)
+		return "", nil, err
+	}
+	cloudwatchMetricData["CurrentUsage"] = currentUsage
+	// Get average usage
+	averageUsage, err := GetCpuUtilizationMetricData(clientAuth, instanceID, namespace, startTime, endTime, "Average")
+	if err != nil {
+		log.Println("Error in getting average: ", err)
+		return "", nil, err
+	}
+	cloudwatchMetricData["AverageUsage"] = averageUsage
+	// Get max usage
+	maxUsage, err := GetCpuUtilizationMetricData(clientAuth, instanceID, namespace, startTime, endTime, "Maximum")
+	if err != nil {
+		log.Println("Error in getting maximum: ", err)
+		return "", nil, err
+	}
+	cloudwatchMetricData["MaxUsage"] = maxUsage
+	jsonOutput := map[string]float64{
+		"CurrentUsage": *currentUsage.MetricDataResults[0].Values[0],
+		"AverageUsage": *averageUsage.MetricDataResults[0].Values[0],
+		"MaxUsage":     *maxUsage.MetricDataResults[0].Values[0],
+	}
 
-// Get max usage
-maxUsage, err := GetCpuUtilizationMetricData(clientAuth, instanceID, metricName, namespace, startTime, endTime, "Maximum")
-			if err != nil {
-				log.Fatal(err)
-			}
+	jsonString, err := json.Marshal(jsonOutput)
+	if err != nil {
+		log.Println("Error in marshalling json in string: ", err)
+		return "", nil, err
+	}
 
-jsonOutput := map[string]float64{
-    "CurrentUsage": *currentUsage.MetricDataResults[0].Values[0],
-    "AverageUsage": *averageUsage.MetricDataResults[0].Values[0],
-    "MaxUsage":     *maxUsage.MetricDataResults[0].Values[0],
-}
+	return string(jsonString), cloudwatchMetricData, nil
 ```
 ## AWSX (Parent Command) Pseudocode
 
@@ -175,7 +189,7 @@ This Go code defines an HTTP handler function for retrieving CPU utilization met
 Method - GET
 ```
 ```
-API End Point - /awsx/ec2/cpu-utilization-panel
+API End Point - /awsx-api/getQueryOutput
 Request -  params {?zone=us-east-1&externalId=DJ6@a8hzG@xkFwSvLmkSR5SN&crossAccountRoleArn=arn:aws:iam::657907747545:role/CrossAccount&elementType=AWS/EC2&instanceID=i-05e4e6757f13da657&query=CPUUtilization&statistic=SampleCount}
 Response - GetCpuUtilizationPanel(w http.ResponseWriter, r *http.Request)
 ```
