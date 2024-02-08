@@ -2,6 +2,7 @@
 - [awsx-api-specifications](#awsx-api-specifications)
 - [getLandingZoneDetails subcommand details](#getlandingzonedetails-subcommand-details)
 - [getElementDetails subcommand details](#getelementdetails-subcommand-details)
+- [List All getElementDetails Api Completed](#list-all-getelementdetails-api-completed)
   
 # awsx-api-specifications
 AWSX is the modular command line CLI for for Appkube platform. All the subcommands are written as plugins for the main commands.Appkube job engine calls those CLI commands for all its supported automation jobs. The commands are also directly embeddded in AWSX-Api server. 
@@ -70,3 +71,24 @@ method like network_utilization_panel. So , we can keep a single repo for the su
 | 2    | awsx --vaultURL=vault.synectiks.net getElementDetails --elementId="1234" --elementType=EC2 --query="cpu_utilization_panel"  | This will get the specific EC2 instance cpu utilization panel data in hybrid structure |
 | 3    | awsx --vaultURL=vault.synectiks.net getElementDetails --elementId="1234" --elementType=EC2 --query="storage_utilization_panel" | This will get the specific EC2 instance storage utilization panel data in hybrid structure|
 | 4    | awsx --vaultURL=vault.synectiks.net getElementDetails --elementId="1234" --elementType=EC2 --query="network_utilization_panel"  | This will get the specific EC2 instance network utilization panel data in hybrid structure |
+
+
+# List All getElementDetails Api Completed
+
+All the supported subcommands and there source code locations are mentiioned in 
+
+for getElementDetails command and api list:
+
+https://github.com/Appkube-awsx/awsx-api/blob/main/specs/allDetailsFile/allElementDetails.md
+
+| S.No | EC2 | ECS | EKS | 
+|------|-------------|-------------|-------------|
+| 1    | cpu_utilization_panel        | cpu_utilization_panel| cpu_utilization_panel  | 
+| 2    | memory_utilization_panel       | memory_utilization_panel |memory_utilization_panel| 
+| 3    | storage_utilization_panel       | storage_utilization_panel |storage_utilization_panel  | 
+| 4    | network_utilization_panel       | network_utilization_panel |network_utilization_panel  | 
+| 5    |        |  |cpu_request_panel  | 
+| 6    |        |  |allocatable_cpu_panel  | 
+| 7    |        |  |cpu_limits_panel  | 
+| 8    |        |  |cpu_utilization_graph_panel  | 
+
